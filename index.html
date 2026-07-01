@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoPrime - Concessionária</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    .hero {
+      background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url('https://source.unsplash.com/random/1920x1080/?luxury+car') center/cover no-repeat;
+    }
+    
+    .car-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    .car-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .car-card:hover {
+      transform: scale(1.08) translateY(-8px);
+      box-shadow: 0 30px 60px -15px rgb(0 0 0 / 0.5);
+    }
+
+    .filter-btn {
+      transition: all 0.3s ease;
+    }
+
+    .active-filter {
+      background-color: rgb(220 38 38);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    /* Animação suave ao mudar filtros */
+    #carsGrid {
+      transition: all 0.4s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-white">
+
+  <!-- Navbar -->
+  <nav class="bg-black fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-car text-4xl text-red-500"></i>
+        <h1 class="text-3xl font-bold">AutoPrime</h1>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero min-h-screen flex items-center pt-20">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h1 class="text-6xl md:text-7xl font-bold mb-6 animate-fade-in">Encontre seu próximo carro</h1>
+      <p class="text-2xl text-gray-300">Busque, filtre e ordene como preferir</p>
+    </div>
+  </section>
+
+  <!-- Veículos -->
+  <section id="veiculos" class="py-20 bg-gray-900">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-5xl font-bold text-center mb-10">Nossa Frota</h2>
+
+      <!-- Controles -->
+      <div class="bg-gray-800 rounded-3xl p-6 mb-12 space-y-6">
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput"
+            onkeyup="applyFilters()"
+            placeholder="🔎 Buscar por modelo (ex: Corolla, X5...)"
+            class="w-full bg-gray-700 text-white placeholder-gray-400 px-6 py-5 rounded-3xl text-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-all">
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Tipo</label>
+            <div class="flex flex-wrap gap-2" id="typeFilters">
+              <button onclick="filterCars('all')" class="active-filter filter-btn text-sm px-5 py-2.5 rounded-2xl">Todos</button>
+              <button onclick="filterCars('sedan')" class="filter-btn text-sm px-5 py-2.5 rounded-2xl hover:bg-gray-700">Sedan</button>
+              <button onclick="filterCars('suv')" class="filter-btn text-sm px-5 py-2.5 rounded-2xl hover:bg-gray-700">SUV</button>
+              <button onclick="filterCars('hatch')" class="filter-btn text-sm px-5 py-2.5 rounded-2xl hover:bg-gray-700">Hatch</button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Marca</label>
+            <select id="brandFilter" onchange="applyFilters()" class="w-full bg-gray-700 text-white px-5 py-3 rounded-2xl transition-all">
+              <option value="">Todas</option>
+              <option value="BMW">BMW</option>
+              <option value="Mercedes">Mercedes</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Audi">Audi</option>
+              <option value="Volkswagen">Volkswagen</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Ano</label>
+            <select id="yearFilter" onchange="applyFilters()" class="w-full bg-gray-700 text-white px-5 py-3 rounded-2xl transition-all">
+              <option value="">Todos os anos</option>
+              <option value="2025">2025</option>
+              <option value="2024">2024</option>
+              <option value="2023">2023</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm text-gray-400 mb-2">Ordenar</label>
+            <select id="sortFilter" onchange="applyFilters()" class="w-full bg-gray-700 text-white px-5 py-3 rounded-2xl transition-all">
+              <option value="relevant">Mais Relevantes</option>
+              <option value="price-low">Menor Preço</option>
+              <option value="price-high">Maior Preço</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid de Carros -->
+      <div id="carsGrid" class="grid md:grid-cols-3 gap-8">
+        <!-- Preenchido via JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const cars = [
+      { id: 1, name: "BMW Série 3", brand: "BMW", type: "sedan", price: 289900, year: 2025, img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800" },
+      { id: 2, name: "Mercedes C200", brand: "Mercedes", type: "sedan", price: 345000, year: 2025, img: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800" },
+      { id: 3, name: "Toyota Corolla", brand: "Toyota", type: "sedan", price: 139900, year: 2024, img: "https://images.unsplash.com/photo-1621007947383-9c4f8c0b9b7c?w=800" },
+      { id: 4, name: "BMW X5", brand: "BMW", type: "suv", price: 489900, year: 2025, img: "https://images.unsplash.com/photo-1558618666-fcd25c85ee64?w=800" },
+      { id: 5, name: "Audi Q3", brand: "Audi", type: "suv", price: 289900, year: 2024, img: "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800" },
+      { id: 6, name: "Toyota Corolla Cross", brand: "Toyota", type: "suv", price: 179900, year: 2024, img: "https://images.unsplash.com/photo-1632823471565-1b6f8f0f2e6e?w=800" },
+      { id: 7, name: "Volkswagen Golf", brand: "Volkswagen", type: "hatch", price: 119900, year: 2023, img: "https://images.unsplash.com/photo-1592198084033-a9f4c3f3f3f3f3?w=800" },
+      { id: 8, name: "Mercedes GLE", brand: "Mercedes", type: "suv", price: 529900, year: 2025, img: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800" },
+      { id: 9, name: "Audi A4", brand: "Audi", type: "sedan", price: 259900, year: 2024, img: "https://images.unsplash.com/photo-1618843479313-40f8e899fcce?w=800" },
+      { id: 10, name: "BMW 320i", brand: "BMW", type: "sedan", price: 265000, year: 2023, img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800" }
+    ];
+
+    let currentTypeFilter = 'all';
+
+    function renderCars(filteredCars) {
+      const grid = document.getElementById('carsGrid');
+      grid.innerHTML = '';
+
+      if (filteredCars.length === 0) {
+        grid.innerHTML = `<p class="col-span-3 text-center text-gray-400 py-20 text-xl">Nenhum veículo encontrado.</p>`;
+        return;
+      }
+
+      filteredCars.forEach((car, index) => {
+        const cardHTML = `
+          <div class="car-card bg-gray-800 rounded-3xl overflow-hidden" style="animation-delay: ${index * 80}ms">
+            <img src="${car.img}" class="w-full h-64 object-cover transition-transform duration-500 hover:scale-110">
+            <div class="p-6">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-2xl font-semibold">${car.name}</h3>
+                  <p class="text-gray-400">${car.brand} • ${car.year}</p>
+                </div>
+                <span class="bg-red-500/10 text-red-400 text-sm px-3 py-1 rounded-full">${car.year}</span>
+              </div>
+              <p class="text-3xl font-bold text-red-500 mt-4">R$ ${(car.price / 1000).toFixed(0)}.000</p>
+              <button onclick="alert('Test drive para ${car.name} (${car.year}) agendado com sucesso! 🚗')" 
+                      class="mt-6 w-full bg-red-600 hover:bg-red-700 py-4 rounded-2xl font-medium transition-all active:scale-95">
+                Agendar Test Drive
+              </button>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += cardHTML;
+      });
+
+      // Ativa a animação após renderizar
+      setTimeout(() => {
+        document.querySelectorAll('.car-card').forEach(card => {
+          card.classList.add('visible');
+        });
+      }, 10);
+    }
+
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+      const brand = document.getElementById('brandFilter').value;
+      const year = document.getElementById('yearFilter').value;
+      const sortType = document.getElementById('sortFilter').value;
+
+      let filtered = cars.filter(car => {
+        const typeMatch = (currentTypeFilter === 'all') || (car.type === currentTypeFilter);
+        const brandMatch = !brand || car.brand === brand;
+        const yearMatch = !year || car.year.toString() === year;
+        const searchMatch = !searchTerm || car.name.toLowerCase().includes(searchTerm);
+        return typeMatch && brandMatch && yearMatch && searchMatch;
+      });
+
+      if (sortType === 'price-low') filtered.sort((a, b) => a.price - b.price);
+      else if (sortType === 'price-high') filtered.sort((a, b) => b.price - a.price);
+
+      renderCars(filtered);
+    }
+
+    function filterCars(type) {
+      currentTypeFilter = type;
+      
+      document.querySelectorAll('#typeFilters button').forEach(btn => {
+        btn.classList.toggle('active-filter', 
+          (type === 'all' && btn.textContent === 'Todos') || 
+          btn.getAttribute('onclick').includes(`'${type}'`)
+        );
+      });
+
+      applyFilters();
+    }
+
+    // Inicializa com animação
+    window.onload = () => {
+      renderCars(cars);
+    };
+  </script>
+</body>
+</html>
