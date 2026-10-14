@@ -2,76 +2,72 @@
 <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
-
-
-    
-
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Blog</title>
-<style>
-    header{
-        background-color: rgba(6, 43, 207, 0.956);
-        color: rgb(236, 231, 235);
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto ;
-        border: 5px solid rgb(6, 166, 155);
-        padding: 16px;
-    }
-    main{
-        background-color: rgba(9, 101, 186, 0.79);
-        color: rgb(221, 221, 228);
-        text-align: center;
-        max-width: 800px;
-        margin: 0 auto ;
-        border: 5px solid rgb(2, 68, 167);
-        padding: 16px;
-        display: flex;
-    }
-    img{
-        width: 80px;
-        height: 80px;
-        font-weight: bold;
-    }
+        <title>Meu blog</title>
+        <style>
+            header{
+                background-color: rgb(12, 5, 54);
+                color: azure;
+                text-align: center;
+                max-width: 800px;
+                margin: 0 auto;
+                border: 5px solid rgba(255, 0, 0, 0.039);
+                padding: 16px;
+            }
+            main{
+                background-color: aliceblue;
+                color: blue;
+                text-align: center;
+                max-width: 800px;
+                margin: 0 auto;
+                border: 5px solid rgba(255, 0, 0, 0.016);
+                padding: 16px;
+                display: flex;
+            }
+            img{
+                    width: 80px;
+                    height: 80px;
+           
+            }
 
-    .artigo-autor {
-        font-weight: bold;
-    }
+            .artigo-autor {
+                font-weight: bold;
+            }
 
-
-</style>
-
+        </style>
     </head>
     <body>
         <header>
-            <h1>👾Mundo Sigma👾</h1>
-            <p>Vamos dar um play▶️</p>
+            <h1>Clube de .</h1>
+            <p> Venha se </p>
         </header>
 
-    <main>
-        <img src="https://media1.tenor.com/m/lPcexeCDyZ8AAAAd/gentleman-giga-chad.gif" alt="Uma imagem de capa temática para o site Mundo Pixel. Em um ambiente escuro iluminado por luzes LED verde-neon, um gamer veste headset e joga em um setup moderno com gabinete transparente, teclado e mouse iluminados. Sobre a mesa, há dois monitores exibindo jogos e a logo 'Mundo Pixel', além de consoles clássicos como Super Nintendo, um PlayStation 5 e caixas de jogos. Na parede, destaca-se um letreiro luminoso em neon verde com o nome 'Mundo Pixel'.">
-    <div></div>
-        <h2>Sua próxima aventura começa aqui,Os melhores preços em consoles e games so aqui no Mundo Sigma</h2>
-        <p>Sejam Bem vindos ao mundo Sigma </p>
-        <p class="artigo-autor">Por:Luis Guilherme</p>
-            <button>🍷<span>0</span></button>
-            <button>🗿<span>0</span></button>  
-          <div>
-    </main>
-
+        <main>
+           
+            <img src="https://media1.tenor.com/m/mmXj5AeF2YkAAAAd/sigma.gif" alt="Sigma👾">
+            <div>
+                <h2>Meu primeiro post</h2>
+                <p>Sejam bem vindos ao Clube de Farmador de aura do Colégio Branca da Mota Fernandes.</p>
+                <p class="artigo-autor">Por: Luis</p>
+                <button>🗿 <span>0</span></button>
+                <button>🍷​<span>0</span></button>
+            </div>
+        <main>
+       
 </body>
-  <script>
- const botoes = document.querySelectorAll("main buttton");
- botoes.ForEach(function (botao) {
-    botao.addEventListener("click", botoesClicado);
- 
-        function botaoClicado() {
-         console.log("fui clicado");
-              let texto = botaot.querySelector("span");
-                     texto.textContent++;
-        }    
- });
+<script>
+  const botoes = document.querySelectorAll("main button");
+   botoes.forEach(function (botao) {
+        botao.addEventListener("click", botaoClicado);
 
+        function botaoClicado() {
+            console.log("fui clicado");
+            let texto = botao.querySelector("span");
+            texto.textContent++;
+        }
+    });
+   
 </script>
+
 
 </html>
